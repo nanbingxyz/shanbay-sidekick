@@ -34,9 +34,6 @@ a:hover{color: #666;}
 	border-style: solid;
 	float: left;
 }
-.word_input:focus{
-	border-color:#B8E356;
-}
 
 a.query_btn{
 	padding:6px;

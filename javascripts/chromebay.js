@@ -308,11 +308,13 @@ chromebay.autocomplete={
 		);
 	},
 	refreshSource:function(){
-		chromebay.webdb.queryHistory(
-			function(tx,rs){
-				$('input[name="word"]').autocomplete('option','source',chromebay.autocomplete.source(rs));
-			}
-		);
+		if($('input[name="word"]').autocomplete){
+			chromebay.webdb.queryHistory(
+				function(tx,rs){
+					$('input[name="word"]').autocomplete('option','source',chromebay.autocomplete.source(rs));
+				}
+			);
+		}
 	}
 }
 

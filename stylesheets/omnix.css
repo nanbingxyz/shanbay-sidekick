@@ -6,22 +6,24 @@
 	background:#fff;
 	border-width: 1px 16px 1px 1px;
 	border-style: solid;;
-	border-color: #e5e5e5 #78E5FB #e5e5e5 #e5e5e5; ;
+	border-color: #e5e5e5 #9DCE2C #e5e5e5 #e5e5e5; ;
 	position:fixed;
 	left:0;
-	top:0;
+	top:-1px;
 	font-family: "Microsoft Yahei";
 	font-weight: normal;
-	border-bottom-right-radius: 10% 5%;
+	border-bottom-right-radius: 10% 8%;
 	color: #666!important;
 
 }
-#chromebay div, #chromebay table, #chromebay td{width:auto;margin: 0;padding: 0;}
+#chromebay div, #chromebay table, #chromebay td{width:auto;margin: 0;padding: 0;border:none!important;}
+#chromebay table, #chromebay td{background:#fff!important;height: auto!important;}
 #chromebay ul{
 	margin: 0;
-	padding: 0;
+	padding: 0!important;
 	list-style-type:square;
 	list-style-position:inside;
+	border:none!important;
 }
 #chromebay li{padding: 5px 0;margin:0;}
 #chromebay a:link,#chromebay a:visited{color: #0088cc;text-decoration: none; font-size: 12px;font-weight: normal;font-family: inherit;}
