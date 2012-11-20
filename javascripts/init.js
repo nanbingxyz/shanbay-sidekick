@@ -1,6 +1,12 @@
 $(function(){
 	var $wordInput=$('input[name="word"]');
+
+	chromebay.autocomplete.enable();
+
 	$wordInput[0].focus();
+
+	
+
 	$wordInput.keyup(function(e){
 		if(e.which == 13 ){
 			chromebay.query();

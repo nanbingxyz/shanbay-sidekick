@@ -99,8 +99,10 @@ var chromebay={
 		return result;
 	},
 	cache:function(k,v){
-		localStorage[k]=v;
-		
+		chromebay.webdb.open();
+		chromebay.webdb.createTable();
+		chromebay.webdb.record(k,v);
+		chromebay.autocomplete.refreshSource();
 	},
 	render:function(json){
 		if(json.voc==""){
@@ -156,8 +158,9 @@ var chromebay={
 		}
 		return html;
 	},
-	query:function(){
-		chromebay.word = $('input[name="word"]').val();
+	query:function(word){
+		$('.ui-widget').hide();
+		chromebay.word = word||$('input[name="word"]').val();
 		if($.trim(chromebay.word)!=""){
 			chromebay.toggleQueryBtn(true);
 			chromebay.jqXHR=$.ajax({
@@ -199,6 +202,117 @@ var chromebay={
 				dataType:'html json'
 			})
 		}
+	}
+}
+
+
+chromebay.webdb={
+	open: function(){
+		var dbSize = 5 * 1024 * 1024;
+  		chromebay.webdb.db = openDatabase("chromebay-db", "1.0", "shanbay-sidekick", dbSize);
+	},
+	onError:function(tx, e){
+		console.error("There has been an error: " + e.message);
+	},
+	onSuccess:function(tx, e){
+		//do noting
+	},
+	createTable:function(){
+  		chromebay.webdb.db.transaction(function(tx) {
+    		tx.executeSql("CREATE TABLE IF NOT EXISTS " +
+                  "history(ID INTEGER PRIMARY KEY ASC, word TEXT,definition TEXT, created_at DATETIME)", []);
+  		});
+	},
+	record:function(word,definition,max){
+		var w=word.toLowerCase();
+		var _max = max || 10;
+  		chromebay.webdb.db.transaction(function(tx){
+  			tx.executeSql("SELECT COUNT(*) total FROM history",[],
+  				function(tx,rs){
+  					if(rs.rows.item(0)['total']>=_max){
+  						tx.executeSql(
+  							"DELETE FROM history WHERE id = (SELECT MIN(ID) FROM history)",[],
+  							chromebay.webdb.onSuccess,
+  							chromebay.webdb.onError
+  						);
+  					}
+  					tx.executeSql("DELETE FROM history WHERE word = ?",[w],
+  						function(tx,r){
+  							tx.executeSql(
+  								"INSERT INTO history(word,definition,created_at) VALUES (?,?,?)",
+				        		[w,definition, new Date()],
+				        		chromebay.webdb.onSuccess,
+				        		chromebay.webdb.onError
+				        	);
+		   				},
+  						chromebay.webdb.onError
+  					);
+  				},
+  				chromebay.webdb.onError
+  			);
+   		});
+	},
+	queryHistory:function(callback){
+		chromebay.webdb.open();
+		chromebay.webdb.createTable();
+		chromebay.webdb.db.transaction(function(tx){
+			tx.executeSql(
+				"SELECT *  FROM history ORDER BY id desc",[],
+				callback,
+				chromebay.webdb.onError
+			)
+		});
+	}
+}
+
+String.prototype.sub = function(n){    
+	var r = /[^\x00-\xff]/g;    
+	if(this.replace(r, "mm").length <= n) return this;     
+	var m = Math.floor(n/2);    
+	for(var i=m; i<this.length; i++) {    
+		if(this.substr(0, i).replace(r, "mm").length>=n) {    
+	   		return this.substr(0, i) ; }    
+	  	} 
+  	return this;   
+};
+
+chromebay.autocomplete={
+
+	source:function(rs){
+		var result=[];
+		for(var i=0;i<rs.rows.length;i++){
+			var word=rs.rows.item(i)['word'];
+			var definition=rs.rows.item(i)['definition'];
+			result.push({"value":word,"definition":definition});
+		}
+		return result;
+	},
+	enable:function(){
+		chromebay.webdb.queryHistory(
+			function(tx,rs){
+				var words=chromebay.autocomplete.source(rs);
+				$('input[name="word"]').autocomplete({
+					source: words,
+					minLength:0,
+					select: function(event, ui) {
+					    chromebay.query(ui.item.value);
+					    return false;
+					}
+				}).data( "autocomplete" )._renderItem = function( ul, item ) {
+		            return $( '<li title="'+item.definition+'" >' )
+		                .data( "item.autocomplete", item )
+		                .append( '<a href="javascript:void(0)"><span class="word">'+item.value+'</span><span class="definition">'+item.definition.sub(40)+'</span></a>' )
+		                .appendTo(ul);
+				};
+			}
+		);
+	},
+	refreshSource:function(){
+		chromebay.webdb.queryHistory(
+			function(tx,rs){
+				$('input[name="word"]').autocomplete('option','source',chromebay.autocomplete.source(rs));
+			}
+		);
 	}
 }
 

@@ -1,0 +1,29 @@
+.ui-widget { font-family: Arial,sans-serif; font-size: 1.2px; font-weight: normal;}
+.ui-widget-content {
+	border-style: solid;
+	border-width: 0 1px 1px 1px;
+	border-color: #ddd;
+	background: #ffffff;
+	color: #222222;
+	-webkit-border-bottom-left-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    box-shadow:0px 1px 3px #ddd;
+}
+
+.ui-helper-hidden-accessible{display: none;}
+.ui-autocomplete {
+	width: 340px;
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    list-style-type: none;
+	position: absolute;
+	top: 0; 
+	cursor: default;
+}
+.ui-autocomplete li{padding: 7px 4px;cursor: pointer;}
+.ui-autocomplete li:nth-child(odd) {background: #F2F2F2;}
+.ui-autocomplete li:hover{background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #89c403), color-stop(1, #77a809) );color:#fff;}
+.ui-autocomplete li .word{display: inline-block;margin-right: 10px; color: #666;}
+.ui-autocomplete li .definition{color: #999!important;font-family: "Microsoft Yahei";} 
+.ui-autocomplete li:hover .word,.ui-autocomplete li:hover .definition{color:#fff!important;}
