@@ -1,0 +1,94 @@
+html,body,div,input,ul,ol,li,table{
+	margin: 0;
+	padding: 0;
+}
+ul{list-style-type:square;list-style-position:inside;}
+a:link,a:visited{color: #0088cc;text-decoration: none; font-size: 12px;font-family: "Microsoft Yahei";}
+a:hover{color: #666;}
+
+#chromebay-container{
+	width: 360px;
+	padding: 10px;
+}
+
+#chromebay-content{
+	padding: 10px;
+	line-height: 180%!important;
+	margin:10px auto 10px auto;
+	font-size: 12px;
+	font-weight: normal;
+	font-family: "Microsoft Yahei";
+	color:#333;
+}
+#chromebay-content td{
+	font-size: 12px;
+	font-family: arial,sans-serif;
+}
+
+.word_input{
+	width: 300px;
+	padding:6px;
+	font-size:16px;
+	outline: none;
+	border-width:1px 0 1px 1px;
+	border-color: #ddd;
+	border-style: solid;
+	float: left;
+}
+.word_input:focus{
+	border-color:#B8E356;
+}
+
+a.query_btn{
+	padding:6px;
+	display: inline-block;
+	height: 19px;
+	width: 30px;
+	position: relative;
+	border-width:1px 1px 1px 0;
+	border-color: #ddd;
+	border-style: solid;
+	background: #eee;
+}
+#chromebay-imgQuery{
+	position: absolute;
+	top:3px;
+	left: 9px;
+}
+#chromebay-imgQuerying{
+	position: absolute;
+	top:0;
+	left: 3px;
+	display: none;
+}
+#chromebay-word{font-size: 32px;font-weight: bold;padding-bottom: 10px;font-family: 'Times New Roman','Georgia';text-shadow: 1px 1px 2px #999;}
+#chromebay-pron{font-size: 14px;margin: 6px 0;position: relative;}
+#chromebay-pron img{cursor: pointer;}
+#chromebay-pron .tools{position: absolute;top:-7px;right: 10px;}
+#chromebay-pron .tools a{display: inline-block;padding: 2px 6px;background: #efefef;font-size: 12px;}
+#chromebay-pron .tools span{display: inline-block;padding: 2px 6px;font-size: 12px;}
+#chromebay-pron .tools a:hover{background: #e5e5e5;}
+#chromebay-definition{font-size: 14px;margin-bottom: 5px;}
+#chromebay-en-definitions{border-radius: 5px;width: 340px;}
+#chromebay-en-definitions li{padding:2px 0;line-height: 160%!important;color: #333!important;}
+#chromebay-loginLink{ margin: 20px auto 0 auto;text-align: center;display: none;}
+#chromebay-loginLink a{font-size: 26px; font-family: "Microsoft Yahei";}
+#chromebay-loginLink span{font-size: 12px;color:#999;display:block;padding: 5px 0;font-family: "Microsoft Yahei";}
+#chromebay-examples div{padding:10px;background: #eee;margin: 10px 0;}
+#chromebay-examples .entry{color:orange;}
+
+[class^="icon-"], [class*=" icon-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url("http://static.shanbay.com/static/img/glyphicons-halflings.png");
+	background-position: 14px 14px;
+	background-repeat: no-repeat;
+	margin-top: 3px;
+}
+.icon-volume-up {
+	background-position: -408px -24px;
+	cursor: pointer;
+}

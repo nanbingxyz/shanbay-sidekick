@@ -1,0 +1,27 @@
+{
+	"manifest_version":2,
+  	"name": "扇贝Sidekick",
+  	"version": "0.1",
+  	"description": "扇贝网插件，提供单词快捷查询及划词翻译等功能",
+    "homepage_url":"http://www.shanbay.com",
+  	"omnibox": { "keyword" : "sk" },
+  	"icons":{
+  		"16":"images/icon16.png",
+      "48":"images/icon48.png",
+      "128":"images/icon128.png"
+  	},
+	"permissions": [
+    	"tabs",
+      "topSites",
+    	"http://*/*",
+      "https://*/*"
+	],
+  	"browser_action": {
+    	"default_icon": "images/icon48.png",
+    	"default_popup": "popup.html" 
+  	},
+  	"background": {
+    	"persistent": false,
+    	"scripts": ["javascripts/background.js","javascripts/jquery-1.8.3.min.js"]
+  	}
+}

@@ -1,0 +1,30 @@
+<html>
+	<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>扇贝Sidekick</title>
+			<link rel="stylesheet" type="text/css" href="stylesheets/chromebay.css">
+			<script type="text/javascript" src="javascripts/jquery-1.8.3.min.js"></script>
+			<script type="text/javascript" src="javascripts/chromebay.js"></script>
+			<script type="text/javascript" src="javascripts/init.js"></script>
+	</head>
+	<body>
+		<div id="chromebay-container">
+			<div id="chromebay-loginLink">
+				<a href="http://www.shanbay.com/accounts/login/" target="_blank">登录扇贝</a>
+				<span>请检查网络连接，确认可以正常访问扇贝网</span>
+			</div>
+			<div id="chromebay-main">
+				<div>
+					<input type="text" name="word" class="word_input"/>
+					<a class="query_btn" href="javascript:void(0)" id="chromebay-btnQuery">
+						<img src="images/search.png"/ width="24" height="25" alt="查询" id="chromebay-imgQuery"/>
+						<img src="images/ajax-loader.gif"/ width="32" height="32" alt="查询中" id="chromebay-imgQuerying"/>
+					</a>
+				</div>
+				<audio id="chromebay-audio"></audio>
+				<div id="chromebay-content">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
