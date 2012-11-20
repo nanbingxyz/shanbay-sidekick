@@ -76,7 +76,7 @@ var chromebay={
 			if(json.examples_status==1){
 				$('#chromebay-examples').html(chromebay.renderExamples(json));
 			}else if(json.examples_status==0){
-				$('#chromebay-examples').html('该词条暂无例句.');
+				$('#chromebay-examples').html('<div>该词条暂无例句.</div>');
 			}
 			chromebay.clearAnimation();
 		},'json');
@@ -154,7 +154,7 @@ var chromebay={
 		}
 		html+='</table>';
 		if(json.learning_id>0){
-			html+='<div id="chromebay-examples">正在加载例句<span id="chrombay-dots2"></span></div>'
+			html+='<div id="chromebay-examples"><div>正在加载例句<span id="chrombay-dots2"></span></div></div>'
 		}
 		return html;
 	},
