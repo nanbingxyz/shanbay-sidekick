@@ -5,13 +5,11 @@ html,body,div,input,ul,ol,li,table{
 ul{list-style-type:square;list-style-position:inside;}
 a:link,a:visited{color: #0088cc;text-decoration: none; font-size: 12px;font-family: "Microsoft Yahei";}
 a:hover{color: #666;}
-
 #chromebay-container{
 	width: 360px;
 	min-height: 240px;
 	padding: 10px;
 }
-
 #chromebay-content{
 	padding: 10px;
 	line-height: 180%!important;
