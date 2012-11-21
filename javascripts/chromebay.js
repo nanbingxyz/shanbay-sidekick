@@ -82,6 +82,9 @@ var chromebay={
 		},'json');
 	},
 	playMP3: function(audioURL){
+		if(!$('#chromebay-audio')[0]){
+			$(document.body).append('<audio id="chromebay-audio"></audio>');
+		}
 		$('#chromebay-audio').attr('src',audioURL);
 		$('#chromebay-audio')[0].play();
 	},
@@ -133,7 +136,6 @@ var chromebay={
 			html+='<span id="chromebay-add-status" style="display:none;width:60px;">添加中<span id="chromebay-dots3">.</span></span>';
 		}
 		
-		html+='</div>';
 		html+='</div>';
 		html+='<div id="chromebay-definition">'+json.voc.definition+'</div>';
 		var renderEnDefinitions = function(key){

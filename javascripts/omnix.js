@@ -1,6 +1,10 @@
+if(chromebay.jqXHR){
+	chromebay.jqXHR.abort();
+}
+
 if(!$('#chromebay')[0]){
 	$(document.body).append(
-		'<div id="chromebay">'+
+		'<div id="chromebay" class="chromebay">'+
 			'<audio id="chromebay-audio"></audio>'+
 			'<div class="head"><span>扇贝Sidekick</span><a href="javascript:void(0)" class="btnClose" title="关闭">[x]</a></div>'+
 			'<div class="content"></div>'+
@@ -41,7 +45,8 @@ $content=$('#chromebay').find('.content');
 $content.html('<span>查询 '+chromebay.word+' 中<span id="chromebay-dots1"></span></span>');
 chromebay.loadingAnimation('chromebay-dots1');
 
-$.ajax({
+
+chromebay.jqXHR = $.ajax({
 	url:chromebay.url.query(chromebay.word),
 	complete: function(jqXHR, textStatus){
 		try{
