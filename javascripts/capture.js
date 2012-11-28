@@ -34,15 +34,6 @@ var chromebayCapture={
 							'</div>'+
 						'</div>'
 					);
-
-					$('#chromebay-add').click(function(){
-						$(this).fadeOut('fast',function(){
-							$('#chromebay-add-status').fadeIn('fast',function(){
-								chromebay.loadingAnimation('chromebay-dots3');
-								chromebay.addWord(json.voc.content);
-							});
-						});
-					});
 					if(json.learning_id>0){
 						chromebay.loadExamples(json.learning_id);
 					}
@@ -50,7 +41,7 @@ var chromebayCapture={
 						chromebay.playMP3(json.voc.audio);
 					});
 				}catch(e){
-					$('#chromebay-capture').html('<div style="padding:12px"><span>发生错误，可能是网络原因导致，请确认<a href="http://www.shanbay.com" target="_blank">扇贝网</a>能正常访问</span></div>');
+					$('#chromebay-capture').html('<div style="padding:12px"><span style="font-size:12px">发生错误，可能是网络原因导致，请确认<a href="http://www.shanbay.com" target="_blank">扇贝网</a>能正常访问</span></div>');
 				}
 				chromebay.clearAnimation();
 			}
@@ -81,7 +72,7 @@ var chromebayCapture={
 		el.style.top=(pos.y+10)+'px';
 		el.style.left=(pos.x-40)+'px';
 		el.style.display="block";
-		el.innerHTML='<div style="padding:12px"><a href="javascript(0)" id="chromebay-cancel-2">取消</a>&nbsp;&nbsp;<span>正在查询中<span id="loading-dots4"></span></span></div>';
+		el.innerHTML='<div style="padding:12px"><a href="javascript(0)" id="chromebay-cancel-2" style="font-size:12px">取消</a>&nbsp;&nbsp;<span style="font-size:12px">正在查询中<span id="loading-dots4"></span></span></div>';
 		chromebay.loadingAnimation('loading-dots4');
 	},
 	query:function(e){

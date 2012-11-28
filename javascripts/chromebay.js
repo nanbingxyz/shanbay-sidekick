@@ -1,52 +1,196 @@
-var chromebay={
-	url:{
-		query:function(word){
-			return 'http://www.shanbay.com/api/word/'+word;
-		},
-		examples: function(learningID){
-			return 'http://www.shanbay.com/api/learning/examples/'+learningID;
-		},
-		add: function(word){
-			return 'http://www.shanbay.com/api/learning/add/'+word;
-		},
-		addNote: function(learningID,note){
-			return 'http://www.shanbay.com/api/note/add/'+learningID+'?note='+note;
+var Chromebay= Chromebay || {};
+
+Chromebay.context={
+	jqXHR:null,
+	jqXHRCanceled:false,
+	word:null,
+	cxtId:'chromebay',
+	event:null,
+	$:function(selector){
+		if(selector){
+			return $('#'+Chromebay.context.ctxId).find(selector);
 		}
+		return $('#'+Chromebay.context.ctxId);
+	}
+}
+
+Chromebay.url={
+	query: function(word){
+		return 'http://www.shanbay.com/api/word/'+word;
 	},
-	toggleQueryBtn:function(querying){
-		if(querying){
-			$('#chromebay-imgQuery').hide('fast',function(){
-				$('#chromebay-content').html('<a href="javascript:void(0)" id="chromebay-cancel">取消</a>&nbsp;&nbsp;正在查询中<span id="chrombay-dots1"></span>');
-				chromebay.loadingAnimation('chrombay-dots1');
-				$('#chromebay-imgQuerying').show();
-			});
-		}else{
-			$('#chromebay-imgQuerying').hide('fast',function(){
-				$('#chromebay-imgQuery').show();
-			});
-		}
-	}, 
-	clearAnimation: function(){
-		if(chromebay.loadingDot){
-			window.clearInterval(chromebay.loadingDot);
-		}
+	examples: function(learningID){
+		return 'http://www.shanbay.com/api/learning/examples/'+learningID;
 	},
-	loadingAnimation: function(elID,n){
-		var num = n||3;
-		var dots='';
-		chromebay.loadingDot = setInterval(function(){
-			var $obj=$('#'+elID);
-			if($obj.html()=='...'){
-				$obj.html('');
+	add: function(word){
+		return 'http://www.shanbay.com/api/learning/add/'+word;
+	}
+}
+
+
+Chromebay.ui={
+	data:{},
+	animation:function($el){
+		var key = $el.attr('id');
+		this.start=function(n){
+			if(Chromebay.ui.data[key])return;
+			var num = n||5;
+			var dots='';
+			Chromebay.ui.data[key] = setInterval(function(){
+				if($el.html()=='...'){
+					$el.html('');
+				}
+				$el.html($el.html()+'.');
+			},500);
+		}
+		this.clear=function(){
+			if(Chromebay.ui.data[key]){
+				window.clearInterval(Chromebay.ui.data[key]);
 			}
-			$obj.html($obj.html()+'.');
-		},500);
+		}
+		return this;
 	},
-	addWord:function(word){
+	queryLoadingHTML: function(){
+		return '<div id="'+Chromebay.context.cxtId+'" class="chromebay"><a href="javascript:void(0)" class="cancel">取消</a>正在查询中<span class="animation" id="chromebay-animation-1"></span></div>';
+	},
+	render: function(json){
+		if(json.voc==""){
+			return '<div class="undefined">未找到单词<strong>'+Chromebay.word+'</strong>对应的解释。</div>';
+		}
+		Chromebay.cache(json.voc.content,json.voc.definition);
+		var html='<div class="word" learning_id="'+json.learning_id+'">';
+		if(json.learning_id>0){
+			html+='<span class="studied" title="你已经学过这个单词">'+json.voc.content+'</span>';
+		}else{ 
+			html+=json.voc.content;
+		}
+		html+='</div>';
+		html+='<div class="pron">';
+		if(json.voc.pron!=''){
+			html+='['+json.voc.pron+']';
+		}
+		if(json.voc.audio!=''){
+			html+='<span class="icon-volume-up speaker" title="发音"></span>';
+		}
+		html+='<span class="tools">';
+		if(json.learning_id>0){
+			html+='<a href="http://www.shanbay.com/learning/'+json.learning_id+'" target="_blank">详细</a>';
+			html+='<span class="add-status">已在词库中</span>';
+		}else{
+			html+='<a href="javascript:void(0)" class="add-word">添加</a>';
+			html+='<span class="add-status" style="display:none">添加中<span class="animation" id="chromebay-animation-2"></span></span>';
+		}
+		
+		html+='</div>';
+		html+='<div class="definition">'+json.voc.definition+'</div>';
+
+		var renderEnDefinitions = function(key){
+			var enDef = "<ul>";
+			for(var i=0;i<json.voc.en_definitions[key].length;i++){
+				enDef+='<li>'+json.voc.en_definitions[key][i]+'</li>';
+			}
+			enDef+='</ul>';
+			return enDef;
+		}
+
+		html+='<table class="en-definitions" border="0">';
+		for(var key in json.voc.en_definitions){
+			html+='<tr>'+
+			'<td valign="top" align="left" width="10px"><ul style="list-style-type:none;margin-right:2px;"><li>'+key+'</li></ul></td>'+
+			'<td valign="top" align="left">'+renderEnDefinitions(key)+'</td>'+
+			'</tr>';
+		}
+		html+='</table>';
+		if(json.learning_id>0){
+			html+='<div class="examples"><div>正在加载例句<span class="examples-animation" id="chromebay-animation-3"></span></div></div>'
+		}
+		return '<div id="'+Chromebay.context.ctxId+'" class="chromebay">'+html+'</div>';
+	}
+}
+
+Chromebay.validator={
+	isValidWord:function(word){
+		if(!word)return false;
+		if($.trim(word)=="")return false;
+		if(word.length>70)return false;
+		return true;
+	}
+}
+
+Chromebay.event={
+	registerListener:function(json){
+		Chromebay.context.$('span[class~="speaker"]').click(function(e){
+			Chromebay.context.event=e;
+			Chromebay.playMP3(json.voc.audio);
+		});
+		Chromebay.context.$('a[class="add-word"]').click(function(e){
+			Chromebay.context.event=e;
+			Chromebay.addWord(json.voc.content);
+		});
+	}
+}
+
+Chromebay.playMP3=function(audioURL){
+	if(!$('#chromebay-audio')[0]){
+		$(document.body).append('<audio id="chromebay-audio"></audio>');
+	}
+	$('#chromebay-audio').attr('src',audioURL);
+	$('#chromebay-audio')[0].play();
+}
+
+Chromebay.query = function(word,$container,onStart,onComplete,onError){
+	$('.ui-widget').hide();
+	if(Chromebay.validator.isValidWord(word)){
+		Chromebay.context.word = word;
+		$container.html(Chromebay.ui.queryLoadingHTML());
+		Chromebay.ui.animation(Chromebay.context.$('.animation')).start();
+		if(onStart)onStart(word);
+		Chromebay.context.jqXHR=$.ajax({
+			url:Chromebay.url.query(Chromebay.context.word),
+			complete: function(jqXHR,responseText){
+				try{
+					var json=$.parseJSON(jqXHR.responseText);
+					onComplete($container,json);
+					$container.html(Chromebay.ui.render(json));
+					if(json.learning_id>0){
+						Chromebay.examples.load(json.learning_id);
+					}
+					Chromebay.event.registerListener(json);
+				}catch(e){
+					if(Chromebay.context.jqXHRCanceled){
+						Chromebay.context.jqXHRCanceled=false;
+						return;
+					}
+					var html='<div id="'+Chromebay.context.cxtId+'" class="chromebay">'+
+						'<div class="login">'+
+							'<a href="http://www.shanbay.com/accounts/login/" target="_blank">登录扇贝</a>'+
+							'<span>请检查网络连接，确认可以正常访问扇贝网</span>'+
+						'</div>'+
+					'</div>';
+					$container.html(html);
+					if(onError)onError(e,jqXHR,responseText);
+				}
+				Chromebay.ui.animation(Chromebay.context.$('.animation')).clear();
+			},
+			dataType:'html json'
+		});
+	}
+}
+
+Chromebay.addWord = function(word){
+	var $a = $(Chromebay.context.event.target);
+	$a.fadeOut('fast',function(){
+		$a.next().fadeIn('fast',function(){
+			console.dir($a.next().find('animation'));
+			Chromebay.ui.animation($a.next().find('.animation')).start();
+			ajax();
+		});
+	});
+
+	function ajax(){
 		$.ajax({
-			url:chromebay.url.add(word),
+			url:Chromebay.url.add(word),
 			complete:function(jqXHR){
-				chromebay.clearAnimation();
+				Chromebay.ui.animation($a.next().find('.animation')).clear();
 				var success=true;
 				var learningID=0;
 				if(jqXHR.responseText==''){
@@ -59,36 +203,34 @@ var chromebay={
 					}
 				}
 				if(success){
-					$('#chromebay-add-status').html('已添加');
-					$('#chromebay-pron .tools').prepend('<a href="http://www.shanbay.com/learning/'+learningID+'/" target="_blank">详细</a>');
+					$a.next().html('已添加');
+					$a.prepend('<a href="http://www.shanbay.com/learning/'+learningID+'/" target="_blank">详细</a>');
 				}else{
-					$('#chromebay-add-status').html('添加失败').animate({},2000).fadeOut('slow',function(){
-						$('#chromebay-add').fadeIn('fast');
+					$a.next().html('添加失败').animate({},2000).fadeOut('slow',function(){
+						$a.fadeIn('fast');
 					});
 				}
 			}
 		});
-		
-	},
-	loadExamples:function(learningID){
-		chromebay.loadingAnimation('chrombay-dots2');
-		$.get(chromebay.url.examples(learningID),null,function(json){
+	}
+}
+
+
+Chromebay.examples={
+
+	load:function(learningID){
+		console.dir(Chromebay.context.$('.examples-animation'));
+		Chromebay.ui.animation(Chromebay.context.$('.examples-animation')).start();
+		$.get(Chromebay.url.examples(learningID),null,function(json){
 			if(json.examples_status==1){
-				$('#chromebay-examples').html(chromebay.renderExamples(json));
+				Chromebay.context.$('.examples').html(Chromebay.examples.render(json));
 			}else if(json.examples_status==0){
-				$('#chromebay-examples').html('<div>该词条暂无例句.</div>');
+				Chromebay.context.$('.examples').html('<div>该词条暂无例句.</div>');
 			}
-			chromebay.clearAnimation();
+			Chromebay.ui.animation(Chromebay.context.$('.examples-animation')).clear();
 		},'json');
 	},
-	playMP3: function(audioURL){
-		if(!$('#chromebay-audio')[0]){
-			$(document.body).append('<audio id="chromebay-audio"></audio>');
-		}
-		$('#chromebay-audio').attr('src',audioURL);
-		$('#chromebay-audio')[0].play();
-	},
-	renderExamples:function(json){
+	render:function(json){
 		var result='';
 		for(var i=0;i<json.examples.length;i++){
 			result+='<div title="'+(json.examples[i].translation||'暂无翻译')+'">'+
@@ -100,118 +242,22 @@ var chromebay={
 				'</div>';
 		}
 		return result;
-	},
-	cache:function(k,v){
-		chromebay.webdb.open();
-		chromebay.webdb.createTable();
-		chromebay.webdb.record(k,v);
-		chromebay.autocomplete.refreshSource();
-	},
-	render:function(json){
-		if(json.voc==""){
-			return '<div class="undefined">未找到单词<strong>'+chromebay.word+'</strong>对应的解释。</div>';
-		}
-		chromebay.cache(json.voc.content,json.voc.definition);
-		var html='<div id="chromebay-word" learning_id="'+json.learning_id+'">';
-		if(json.learning_id>0){
-			html+='<span style="color:#528FC3" title="你已经学过这个单词">'+json.voc.content+'</span>';
-		}else{ 
-			html+=json.voc.content;
-		}
-		html+='</div>';
-		html+='<div id="chromebay-pron">';
-		if(json.voc.pron!=''){
-			html+='['+json.voc.pron+']';
-		}
-		if(json.voc.audio!=''){
-			html+='<span class="icon-volume-up" title="发音"></span>';
-		}
-		html+='<span class="tools">';
-		if(json.learning_id>0){
-			html+='<a href="http://www.shanbay.com/learning/'+json.learning_id+'" target="_blank">详细</a>';
-			html+='<span id="chromebay-add-status">已在词库中</span>';
-			
-		}else{
-			html+='<a href="javascript:void(0)" id="chromebay-add">添加</a>';
-			html+='<span id="chromebay-add-status" style="display:none;width:60px;">添加中<span id="chromebay-dots3">.</span></span>';
-		}
-		
-		html+='</div>';
-		html+='<div id="chromebay-definition">'+json.voc.definition+'</div>';
-		var renderEnDefinitions = function(key){
-			var enDef = "<ul>";
-			for(var i=0;i<json.voc.en_definitions[key].length;i++){
-				enDef+='<li>'+json.voc.en_definitions[key][i]+'</li>';
-			}
-			enDef+='</ul>';
-			return enDef;
-		}
-
-		html+='<table id="chromebay-en-definitions" border="0">';
-		for(var key in json.voc.en_definitions){
-			html+='<tr>'+
-			'<td valign="top" align="left" width="10px"><ul style="list-style-type:none;margin-right:2px;"><li>'+key+'</li></ul></td>'+
-			'<td valign="top" align="left">'+renderEnDefinitions(key)+'</td>'+
-			'</tr>';
-		}
-		html+='</table>';
-		if(json.learning_id>0){
-			html+='<div id="chromebay-examples"><div>正在加载例句<span id="chrombay-dots2"></span></div></div>'
-		}
-		return html;
-	},
-	query:function(word){
-		$('.ui-widget').hide();
-		chromebay.word = word||$('input[name="word"]').val();
-		if($.trim(chromebay.word)!=""){
-			chromebay.toggleQueryBtn(true);
-			chromebay.jqXHR=$.ajax({
-				url:chromebay.url.query(chromebay.word),
-				complete: function(jqXHR, textStatus){
-					try{
-						var json=$.parseJSON(jqXHR.responseText);
-						$('#chromebay-content').html(chromebay.render(json));
-
-						$('.icon-volume-up').click(function(){
-							chromebay.playMP3(json.voc.audio);
-						});
-
-						$('#chromebay-add').click(function(){
-							$(this).fadeOut('fast',function(){
-								$('#chromebay-add-status').fadeIn('fast',function(){
-									chromebay.loadingAnimation('chromebay-dots3');
-									chromebay.addWord(json.voc.content);
-								});
-							});
-						});
-						chromebay.toggleQueryBtn(false);
-						$('input[name="word"]').val('');
-						chromebay.clearAnimation();
-						if(json.learning_id>0){
-							chromebay.loadExamples(json.learning_id);
-						}
-					}catch(e){
-						if(chromebay.jqXHRCanceled){
-							chromebay.jqXHRCanceled=false;
-							return;
-						}
-						$('#chromebay-main').hide('fast',function(){
-							$('#chromebay-loginLink').show();
-						});
-						chromebay.clearAnimation();
-					}
-				},
-				dataType:'html json'
-			})
-		}
 	}
 }
 
+Chromebay.cache=function(k,v){
+	Chromebay.webdb.open();
+	Chromebay.webdb.createTable();
+	Chromebay.webdb.record(k,v);
+	Chromebay.autocomplete.refreshSource();
+}
 
-chromebay.webdb={
+
+
+Chromebay.webdb={
 	open: function(){
 		var dbSize = 5 * 1024 * 1024;
-  		chromebay.webdb.db = openDatabase("chromebay-db", "1.0", "shanbay-sidekick", dbSize);
+  		Chromebay.webdb.db = openDatabase("chromebay-db", "1.0", "shanbay-sidekick", dbSize);
 	},
 	onError:function(tx, e){
 		console.error("There has been an error: " + e.message);
@@ -220,7 +266,7 @@ chromebay.webdb={
 		//do noting
 	},
 	createTable:function(){
-  		chromebay.webdb.db.transaction(function(tx) {
+  		Chromebay.webdb.db.transaction(function(tx) {
     		tx.executeSql("CREATE TABLE IF NOT EXISTS " +
                   "history(ID INTEGER PRIMARY KEY ASC, word TEXT,definition TEXT, created_at DATETIME)", []);
   		});
@@ -228,14 +274,14 @@ chromebay.webdb={
 	record:function(word,definition,max){
 		var w=word.toLowerCase();
 		var _max = max || 10;
-  		chromebay.webdb.db.transaction(function(tx){
+  		Chromebay.webdb.db.transaction(function(tx){
   			tx.executeSql("SELECT COUNT(*) total FROM history",[],
   				function(tx,rs){
   					if(rs.rows.item(0)['total']>=_max){
   						tx.executeSql(
   							"DELETE FROM history WHERE id = (SELECT MIN(ID) FROM history)",[],
-  							chromebay.webdb.onSuccess,
-  							chromebay.webdb.onError
+  							Chromebay.webdb.onSuccess,
+  							Chromebay.webdb.onError
   						);
   					}
   					tx.executeSql("DELETE FROM history WHERE word = ?",[w],
@@ -243,29 +289,32 @@ chromebay.webdb={
   							tx.executeSql(
   								"INSERT INTO history(word,definition,created_at) VALUES (?,?,?)",
 				        		[w,definition, new Date()],
-				        		chromebay.webdb.onSuccess,
-				        		chromebay.webdb.onError
+				        		Chromebay.webdb.onSuccess,
+				        		Chromebay.webdb.onError
 				        	);
 		   				},
-  						chromebay.webdb.onError
+  						Chromebay.webdb.onError
   					);
   				},
-  				chromebay.webdb.onError
+  				Chromebay.webdb.onError
   			);
    		});
 	},
 	queryHistory:function(callback){
-		chromebay.webdb.open();
-		chromebay.webdb.createTable();
-		chromebay.webdb.db.transaction(function(tx){
+		Chromebay.webdb.open();
+		Chromebay.webdb.createTable();
+		Chromebay.webdb.db.transaction(function(tx){
 			tx.executeSql(
 				"SELECT *  FROM history ORDER BY id desc",[],
 				callback,
-				chromebay.webdb.onError
+				Chromebay.webdb.onError
 			)
 		});
 	}
 }
+
+
+
 
 String.prototype.sub = function(n){    
 	var r = /[^\x00-\xff]/g;    
@@ -277,46 +326,3 @@ String.prototype.sub = function(n){
 	  	} 
   	return this;   
 };
-
-chromebay.autocomplete={
-
-	source:function(rs){
-		var result=[];
-		for(var i=0;i<rs.rows.length;i++){
-			var word=rs.rows.item(i)['word'];
-			var definition=rs.rows.item(i)['definition'];
-			result.push({"value":word,"definition":definition});
-		}
-		return result;
-	},
-	enable:function(){
-		chromebay.webdb.queryHistory(
-			function(tx,rs){
-				var words=chromebay.autocomplete.source(rs);
-				$('input[name="word"]').autocomplete({
-					source: words,
-					minLength:0,
-					select: function(event, ui) {
-					    chromebay.query(ui.item.value);
-					    return false;
-					}
-				}).data( "autocomplete" )._renderItem = function( ul, item ) {
-		            return $( '<li title="'+item.definition+'" >' )
-		                .data( "item.autocomplete", item )
-		                .append( '<a href="javascript:void(0)"><span class="word">'+item.value+'</span><span class="definition">'+item.definition.sub(40)+'</span></a>' )
-		                .appendTo(ul);
-				};
-			}
-		);
-	},
-	refreshSource:function(){
-		if($('input[name="word"]').autocomplete){
-			chromebay.webdb.queryHistory(
-				function(tx,rs){
-					$('input[name="word"]').autocomplete('option','source',chromebay.autocomplete.source(rs));
-				}
-			);
-		}
-	}
-}
-

@@ -52,7 +52,7 @@ chromebay.jqXHR = $.ajax({
 		try{
 			var json=$.parseJSON(jqXHR.responseText);
 			$content.html(chromebay.render(json));
-			$('#chromebay-add').click(function(){
+			$('.chromebay-add').click(function(){
 				$(this).fadeOut('fast',function(){
 					$('#chromebay-add-status').fadeIn('fast',function(){
 						chromebay.loadingAnimation('chromebay-dots3');
@@ -67,7 +67,7 @@ chromebay.jqXHR = $.ajax({
 				chromebay.playMP3(json.voc.audio);
 			});
 		}catch(e){
-			$content.html('<span>发生错误，可能是网络原因导致，请确认<a href="http://www.shanbay.com" target="_blank">扇贝网</a>能正常访问</span>');
+			$content.html('<span style="font-size:12px;">发生错误，可能是网络原因导致，请确认<a href="http://www.shanbay.com" target="_blank">扇贝网</a>能正常访问</span>');
 		}
 		chromebay.clearAnimation();
 	}
