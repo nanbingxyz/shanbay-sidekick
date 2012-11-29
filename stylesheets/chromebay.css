@@ -3,8 +3,6 @@ html,body,div,input,ul,ol,li,table{
 	padding: 0;
 }
 ul{list-style-type:square;list-style-position:inside;}
-a:link,a:visited{color: #0088cc;text-decoration: none; font-size: 12px;font-family: "Microsoft Yahei";}
-a:hover{color: #666;}
 #chromebay-container{
 	width: 360px;
 	min-height: 240px;
@@ -57,13 +55,15 @@ a.query_btn{
 	left: 3px;
 	display: none;
 }
+.chromebay a:link, .chromebay a:visited{color: #0088cc!important;text-decoration: none!important; font-size: 12px!important;font-family: "Microsoft Yahei"!important;}
+.chromebay a:hover{color: #666!important;}
 .chromebay .word{font-size: 32px;font-weight: bold;padding-bottom: 10px;font-family: 'Times New Roman','Georgia';text-shadow: 1px 1px 2px #999;}
 .chromebay .pron{font-size: 14px;margin: 6px 0;position: relative;}
 .chromebay .pron img{cursor: pointer;}
 .chromebay .pron .tools{position: absolute;top:-7px;right: 10px;}
 .chromebay .pron .tools a{display: inline-block;padding: 2px 6px;background: #efefef;font-size: 12px;}
 .chromebay .pron .tools span{display: inline-block;padding: 2px 6px;font-size: 12px;}
-.chromebay .pron .tools a:hover{background: #e5e5e5;}
+.chromebay .pron .tools a:hover{background: #e5e5e5!important;}
 .chromebay .definition{font-size: 14px;margin-bottom: 5px;}
 .chromebay .en-definitions{border-radius: 5px;width: 340px;}
 .chromebay .en-definitions li{padding:2px 0;line-height: 160%!important;color: #333!important;}

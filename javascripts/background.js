@@ -12,7 +12,7 @@ chrome.omnibox.onInputEntered.addListener(function(text) {
 			chrome.tabs.executeScript(tab.id,{"file":'javascripts/jquery-1.8.3.min.js'},function(){
 				chrome.tabs.executeScript(tab.id,{"file":"javascripts/chromebay.js"},function(){
 					if(text!="+" && text!="-" && text!="@" && $.trim(text)!=''){
-						chrome.tabs.executeScript(tab.id,{"code":'chromebay.word="'+text+'";'},function(){
+						chrome.tabs.executeScript(tab.id,{"code":'Chromebay.context.word="'+text+'";'},function(){
 							chrome.tabs.executeScript(tab.id,{"file":'javascripts/omnix.js'});
 						});
 					}else{

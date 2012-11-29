@@ -4,7 +4,8 @@ Chromebay.context={
 	jqXHR:null,
 	jqXHRCanceled:false,
 	word:null,
-	cxtId:'chromebay',
+	ctxId:'chromebay',
+	cacheEnabled:true,
 	event:null,
 	$:function(selector){
 		if(selector){
@@ -50,11 +51,11 @@ Chromebay.ui={
 		return this;
 	},
 	queryLoadingHTML: function(){
-		return '<div id="'+Chromebay.context.cxtId+'" class="chromebay"><a href="javascript:void(0)" class="cancel">取消</a>正在查询中<span class="animation" id="chromebay-animation-1"></span></div>';
+		return '<div id="'+Chromebay.context.ctxId+'" class="chromebay"><a href="javascript:void(0)" class="cancel" style="font-size:12px;">取消</a><span style="font-size:12px;">正在查询中</span><span class="animation" id="chromebay-animation-1"></span></div>';
 	},
 	render: function(json){
 		if(json.voc==""){
-			return '<div class="undefined">未找到单词<strong>'+Chromebay.word+'</strong>对应的解释。</div>';
+			return '<div class="undefined" style="font-size:12px;">未找到单词<strong>'+Chromebay.context.word+'</strong>对应的解释。</div>';
 		}
 		Chromebay.cache(json.voc.content,json.voc.definition);
 		var html='<div class="word" learning_id="'+json.learning_id+'">';
@@ -143,31 +144,34 @@ Chromebay.query = function(word,$container,onStart,onComplete,onError){
 		Chromebay.context.word = word;
 		$container.html(Chromebay.ui.queryLoadingHTML());
 		Chromebay.ui.animation(Chromebay.context.$('.animation')).start();
-		if(onStart)onStart(word);
+		if($.isFunction(onStart))onStart(word);
+
 		Chromebay.context.jqXHR=$.ajax({
 			url:Chromebay.url.query(Chromebay.context.word),
 			complete: function(jqXHR,responseText){
 				try{
 					var json=$.parseJSON(jqXHR.responseText);
-					onComplete($container,json);
+					if($.isFunction(onComplete))onComplete($container,json);
+
 					$container.html(Chromebay.ui.render(json));
 					if(json.learning_id>0){
 						Chromebay.examples.load(json.learning_id);
 					}
 					Chromebay.event.registerListener(json);
 				}catch(e){
+					console.info(e);
 					if(Chromebay.context.jqXHRCanceled){
 						Chromebay.context.jqXHRCanceled=false;
 						return;
 					}
-					var html='<div id="'+Chromebay.context.cxtId+'" class="chromebay">'+
+					var html='<div id="'+Chromebay.context.ctxId+'" class="chromebay">'+
 						'<div class="login">'+
 							'<a href="http://www.shanbay.com/accounts/login/" target="_blank">登录扇贝</a>'+
 							'<span>请检查网络连接，确认可以正常访问扇贝网</span>'+
 						'</div>'+
 					'</div>';
 					$container.html(html);
-					if(onError)onError(e,jqXHR,responseText);
+					if($.isFunction(onError))onError(e,jqXHR,responseText);
 				}
 				Chromebay.ui.animation(Chromebay.context.$('.animation')).clear();
 			},
@@ -204,7 +208,7 @@ Chromebay.addWord = function(word){
 				}
 				if(success){
 					$a.next().html('已添加');
-					$a.prepend('<a href="http://www.shanbay.com/learning/'+learningID+'/" target="_blank">详细</a>');
+					$a.parent().prepend('<a href="http://www.shanbay.com/learning/'+learningID+'/" target="_blank">详细</a>');
 				}else{
 					$a.next().html('添加失败').animate({},2000).fadeOut('slow',function(){
 						$a.fadeIn('fast');
@@ -222,9 +226,9 @@ Chromebay.examples={
 		console.dir(Chromebay.context.$('.examples-animation'));
 		Chromebay.ui.animation(Chromebay.context.$('.examples-animation')).start();
 		$.get(Chromebay.url.examples(learningID),null,function(json){
-			if(json.examples_status==1){
+			if(json.examples_status==1|| json.examples.length>0){
 				Chromebay.context.$('.examples').html(Chromebay.examples.render(json));
-			}else if(json.examples_status==0){
+			}else if(json.examples_status==0 || json.examples.length==0){
 				Chromebay.context.$('.examples').html('<div>该词条暂无例句.</div>');
 			}
 			Chromebay.ui.animation(Chromebay.context.$('.examples-animation')).clear();
@@ -246,10 +250,14 @@ Chromebay.examples={
 }
 
 Chromebay.cache=function(k,v){
-	Chromebay.webdb.open();
-	Chromebay.webdb.createTable();
-	Chromebay.webdb.record(k,v);
-	Chromebay.autocomplete.refreshSource();
+	if(Chromebay.context.cacheEnabled){
+		Chromebay.webdb.open();
+		Chromebay.webdb.createTable();
+		Chromebay.webdb.record(k,v);
+		if(Chromebay.autocomplete){
+			Chromebay.autocomplete.refreshSource();
+		}
+	}
 }
 
 
