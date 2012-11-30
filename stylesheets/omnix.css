@@ -39,7 +39,7 @@
 
 #chromebay-ominx-container .foot{padding:5px 10px;width: 100%;text-align: right;}
 #chromebay-ominx-container .content{padding:10px 20px;line-height: 180%;width:360px;font-size: 12px!important;border:none!important;background: transparent;min-height: 100px;}
-
+#chromebay-ominx-container .close, #chromebay-capture-container .close{font-size: 12px!important;text-decoration:none!important;color: #999!important; }
 .chromebay div, 
 .chromebay table, 
 .chromebay td{width:auto;margin: 0;padding: 0;border:none!important;}
@@ -72,6 +72,7 @@
 .chromebay .examples .entry{color:orange;}
 .chromebay .cancel{display: inline-block!important;padding-right: 10px;}
 
+
 .chromebay [class^="icon-"],.chromebay [class*=" icon-"] {
 	display: inline-block;
 	width: 14px;
@@ -87,3 +88,5 @@
 	background-position: -408px -24px;
 	cursor: pointer;
 }
+
+#chromebay-capture-indicator{position:fixed;right:10px;top:10px;cursor: pointer;z-index: 99999;}

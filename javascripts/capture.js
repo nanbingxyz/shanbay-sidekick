@@ -1,8 +1,54 @@
 Chromebay.context.ctxId = 'chromebay-capture';
 Chromebay.context.cacheEnabled = false;
 
-var chromebayCapture={
 
+var chromebayCapture={
+	regListener:function(){
+		$(document.body).mouseup(function(e){
+			if(e.target.className=="close"||e.target.className=="cancel"){
+				if(Chromebay.context.jqXHR){
+					Chromebay.context.jqXHR.abort();
+				}
+				chromebayCapture.$container().hide();
+			}else if(
+				$(e.target).parents('#chromebay-capture-container')[0] || 
+				$(e.target).parents('#chromebay-ominx-container')[0] ||
+				$(e.target).parents('#chromebay-capture-indicator')[0]
+			){
+				return;
+			}else{
+				chromebayCapture.query(e);
+			}
+			return false;
+		});
+	},
+	enable:function(){
+		var $icon = $('#chromebay-capture-indicator');
+		if(!$icon[0]){
+			$(document.body).append(
+				'<div id="chromebay-capture-indicator" title="划词翻译已开启，点击关闭划词翻译。\n 按Esc隐藏图标 \n 按Ctrl+/ 显示图标">'+
+				'<img src="'+chrome.extension.getURL('images/capture_on.png')+'" height="48" width=48">'+
+				'</div>');
+		}else{
+			$icon.attr('title','划词翻译已开启，点击关闭划词翻译。\n 按Esc隐藏图标 \n 按Ctrl+/ 显示图标');
+			$icon.find('img').attr('src',chrome.extension.getURL('images/capture_on.png'));
+		}
+		$('#chromebay-capture-indicator').unbind('click').click(function(){
+			chromebayCapture.disable();
+		});
+		chromebayCapture.regListener();
+	},
+	disable:function(){
+		var $icon = $('#chromebay-capture-indicator');
+		$icon.attr('title','划词翻译已停用，点击开启划词翻译。\n 按Esc隐藏图标 \n 按Ctrl+/ 显示图标');
+		$icon.find('img').attr('src',chrome.extension.getURL('images/capture_off.png'));
+		$(document.body).unbind('mouseup');
+		$('#chromebay-capture-container').remove();
+		$('#chromebay-capture-indicator').unbind('click').click(function(){
+			chromebayCapture.enable();
+		});
+
+	},
 	$container:function(){
 		return $('#chromebay-capture-container');
 	},
@@ -70,17 +116,14 @@ var chromebayCapture={
 }
 
 $(function(){
-	document.body.onmouseup=function(e){
-		if(e.target.className=="close"||e.target.className=="cancel"){
-			if(Chromebay.context.jqXHR){
-				Chromebay.context.jqXHR.abort();
-			}
-			chromebayCapture.$container().hide();
-		}else if($(e.target).parents('#chromebay-capture-container')[0] || $(e.target).parents('#chromebay-ominx-container')[0]){
-			return;
-		}else{
-			chromebayCapture.query(e);
+	chromebayCapture.enable();
+	$(document.body).keyup(function(e){
+		if(e.which==27){
+			chromebayCapture.disable();
+			$('#chromebay-capture-indicator').fadeOut('fast');
+		}else if(e.which==191){
+			$('#chromebay-capture-indicator').fadeIn('fast');
+			chromebayCapture.enable();
 		}
-		return false;
-	};
+	});
 });

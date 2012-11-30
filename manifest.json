@@ -26,5 +26,10 @@
 	"background": {
   	"persistent": false,
   	"scripts": ["javascripts/background.js","javascripts/jquery-1.8.3.min.js"]
-	}
+	},
+
+  "web_accessible_resources": [
+    "images/capture_on.png",
+    "images/capture_off.png"
+  ]
 }
