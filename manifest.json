@@ -30,6 +30,8 @@
 
   "web_accessible_resources": [
     "images/capture_on.png",
-    "images/capture_off.png"
+    "images/capture_off.png",
+    "images/expande.png",
+    "images/collapse.png"
   ]
 }
