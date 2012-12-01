@@ -40,7 +40,6 @@ Chromebay.ui={
 				if($el.text()=='....'){
 					$el.text('');
 				}
-				console.debug($el.text());
 				$el.text($el.text()+'.');
 			},500);
 		}
@@ -239,7 +238,7 @@ Chromebay.examples={
 			}else if(json.examples_status==0 || json.examples.length==0){
 				Chromebay.context.$('.examples').html('<div>该词条暂无例句.</div>');
 			}
-			Chromebay.ui.animation(Chromebay.context.$('.examples-animation')).clear();
+			Chromebay.ui.clearAllAnimation();
 		},'json');
 	},
 	render:function(json){
