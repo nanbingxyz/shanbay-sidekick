@@ -21,9 +21,9 @@
 	top: 0; 
 	cursor: default;
 }
-.ui-autocomplete li{padding: 7px 4px;cursor: pointer;}
+.ui-autocomplete li a{padding: 7px 4px;cursor: pointer;display: block;text-decoration: none!important;}
 .ui-autocomplete li:nth-child(odd) {background: #F2F2F2;}
-.ui-autocomplete li:hover{background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #89c403), color-stop(1, #77a809) );color:#fff;}
-.ui-autocomplete li .word{display: inline-block;margin-right: 10px; color: #666;}
-.ui-autocomplete li .definition{color: #999!important;font-family: "Microsoft Yahei";} 
-.ui-autocomplete li:hover .word,.ui-autocomplete li:hover .definition{color:#fff!important;}
+.ui-autocomplete a.ui-state-focus{background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #89c403), color-stop(1, #77a809) );color:#fff;}
+.ui-autocomplete a .word{display: inline-block;margin-right: 10px; color: #666;font-weight: bold;}
+.ui-autocomplete a .desc{color: #999!important;font-family: "Microsoft Yahei";} 
+.ui-autocomplete a.ui-state-focus .word,.ui-autocomplete a.ui-state-focus .desc{color:#fff!important;}

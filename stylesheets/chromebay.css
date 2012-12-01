@@ -22,6 +22,7 @@ ul{list-style-type:square;list-style-position:inside;}
 	font-family: arial,sans-serif;
 }
 
+
 .word_input{
 	width: 300px;
 	padding:6px;
@@ -75,6 +76,7 @@ a.query_btn{
 .chromebay .add-status{width:60px;}
 .chromebay .studied{color:#528FC3!important;}
 .chromebay .cancel{display: inline-block!important;padding-right: 10px;}
+
 
 [class^="icon-"], [class*=" icon-"] {
 	display: inline-block;

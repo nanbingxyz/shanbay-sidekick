@@ -3,8 +3,10 @@ Chromebay.context.cacheEnabled = false;
 
 
 var chromebayCapture={
+	enabled:false,
 	regListener:function(){
 		$(document.body).mouseup(function(e){
+			Chromebay.ui.clearAllAnimation();
 			if(e.target.className=="close"||e.target.className=="cancel"){
 				if(Chromebay.context.jqXHR){
 					Chromebay.context.jqXHR.abort();
@@ -26,27 +28,29 @@ var chromebayCapture={
 		var $icon = $('#chromebay-capture-indicator');
 		if(!$icon[0]){
 			$(document.body).append(
-				'<div id="chromebay-capture-indicator" title="划词翻译已开启，点击关闭划词翻译。\n 按Esc隐藏图标 \n 按Ctrl+/ 显示图标">'+
+				'<div id="chromebay-capture-indicator" title="划词翻译已开启，点击关闭划词翻译。\n 按Esc隐藏/显示图标">'+
 				'<img src="'+chrome.extension.getURL('images/capture_on.png')+'" height="48" width=48">'+
 				'</div>');
 		}else{
-			$icon.attr('title','划词翻译已开启，点击关闭划词翻译。\n 按Esc隐藏图标 \n 按Ctrl+/ 显示图标');
+			$icon.attr('title','划词翻译已开启，点击关闭划词翻译。\n 按Esc隐藏/显示图标');
 			$icon.find('img').attr('src',chrome.extension.getURL('images/capture_on.png'));
 		}
 		$('#chromebay-capture-indicator').unbind('click').click(function(){
 			chromebayCapture.disable();
 		});
 		chromebayCapture.regListener();
+		chromebayCapture.enabled=true;
 	},
 	disable:function(){
 		var $icon = $('#chromebay-capture-indicator');
-		$icon.attr('title','划词翻译已停用，点击开启划词翻译。\n 按Esc隐藏图标 \n 按Ctrl+/ 显示图标');
+		$icon.attr('title','划词翻译已停用，点击开启划词翻译。\n 按Esc隐藏/显示图标');
 		$icon.find('img').attr('src',chrome.extension.getURL('images/capture_off.png'));
 		$(document.body).unbind('mouseup');
 		$('#chromebay-capture-container').remove();
 		$('#chromebay-capture-indicator').unbind('click').click(function(){
 			chromebayCapture.enable();
 		});
+		chromebayCapture.enabled=false;
 
 	},
 	$container:function(){
@@ -119,11 +123,13 @@ $(function(){
 	chromebayCapture.enable();
 	$(document.body).keyup(function(e){
 		if(e.which==27){
-			chromebayCapture.disable();
-			$('#chromebay-capture-indicator').fadeOut('fast');
-		}else if(e.which==191){
-			$('#chromebay-capture-indicator').fadeIn('fast');
-			chromebayCapture.enable();
+			if(chromebayCapture.enabled){
+				chromebayCapture.disable();
+				$('#chromebay-capture-indicator').fadeOut('fast');
+			}else{
+				$('#chromebay-capture-indicator').fadeIn('fast');
+				chromebayCapture.enable();
+			}	
 		}
 	});
 });

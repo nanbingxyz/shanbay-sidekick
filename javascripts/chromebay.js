@@ -33,25 +33,33 @@ Chromebay.ui={
 	animation:function($el){
 		var key = $el.attr('id');
 		this.start=function(n){
+			console.dir($el);
 			if(Chromebay.ui.data[key])return;
-			var num = n||5;
 			var dots='';
 			Chromebay.ui.data[key] = setInterval(function(){
-				if($el.html()=='...'){
-					$el.html('');
+				if($el.text()=='....'){
+					$el.text('');
 				}
-				$el.html($el.html()+'.');
+				console.debug($el.text());
+				$el.text($el.text()+'.');
 			},500);
 		}
 		this.clear=function(){
 			if(Chromebay.ui.data[key]){
 				window.clearInterval(Chromebay.ui.data[key]);
+				Chromebay.ui.data[key]=undefined;
 			}
 		}
+
 		return this;
 	},
+	clearAllAnimation:function(){
+		for(var i in Chromebay.ui.data){
+			 window.clearInterval(Chromebay.ui.data[i]);
+		}
+	},
 	queryLoadingHTML: function(){
-		return '<div id="'+Chromebay.context.ctxId+'" class="chromebay"><a href="javascript:void(0)" class="cancel" style="font-size:12px;">取消</a><span style="font-size:12px;">正在查询中</span><span class="animation" id="chromebay-animation-1"></span></div>';
+		return '<div id="'+Chromebay.context.ctxId+'" class="chromebay"><a href="javascript:void(0)" class="cancel" style="font-size:12px;">取消</a><span style="font-size:12px;">正在查询中</span><span class="query-animation" id="chromebay-animation-1"></span></div>';
 	},
 	render: function(json){
 		if(json.voc==""){
@@ -78,7 +86,7 @@ Chromebay.ui={
 			html+='<span class="add-status">已在词库中</span>';
 		}else{
 			html+='<a href="javascript:void(0)" class="add-word">添加</a>';
-			html+='<span class="add-status" style="display:none">添加中<span class="animation" id="chromebay-animation-2"></span></span>';
+			html+='<span class="add-status" style="display:none">添加中<span class="add-animation" id="chromebay-animation-2"></span></span>';
 		}
 		
 		html+='</div>';
@@ -143,7 +151,7 @@ Chromebay.query = function(word,$container,onStart,onComplete,onError){
 	if(Chromebay.validator.isValidWord(word)){
 		Chromebay.context.word = word;
 		$container.html(Chromebay.ui.queryLoadingHTML());
-		Chromebay.ui.animation(Chromebay.context.$('.animation')).start();
+		Chromebay.ui.animation(Chromebay.context.$('.query-animation')).start();
 		if($.isFunction(onStart))onStart(word);
 
 		Chromebay.context.jqXHR=$.ajax({
@@ -151,15 +159,17 @@ Chromebay.query = function(word,$container,onStart,onComplete,onError){
 			complete: function(jqXHR,responseText){
 				try{
 					var json=$.parseJSON(jqXHR.responseText);
-					if($.isFunction(onComplete))onComplete($container,json);
+					Chromebay.ui.animation(Chromebay.context.$('.query-animation')).clear();
 
+					if($.isFunction(onComplete))onComplete($container,json);
 					$container.html(Chromebay.ui.render(json));
 					if(json.learning_id>0){
 						Chromebay.examples.load(json.learning_id);
 					}
 					Chromebay.event.registerListener(json);
 				}catch(e){
-					console.info(e);
+					console.error(e);
+					Chromebay.ui.animation(Chromebay.context.$('.query-animation')).clear();
 					if(Chromebay.context.jqXHRCanceled){
 						Chromebay.context.jqXHRCanceled=false;
 						return;
@@ -173,7 +183,6 @@ Chromebay.query = function(word,$container,onStart,onComplete,onError){
 					$container.html(html);
 					if($.isFunction(onError))onError(e,jqXHR,responseText);
 				}
-				Chromebay.ui.animation(Chromebay.context.$('.animation')).clear();
 			},
 			dataType:'html json'
 		});
@@ -184,8 +193,7 @@ Chromebay.addWord = function(word){
 	var $a = $(Chromebay.context.event.target);
 	$a.fadeOut('fast',function(){
 		$a.next().fadeIn('fast',function(){
-			console.dir($a.next().find('animation'));
-			Chromebay.ui.animation($a.next().find('.animation')).start();
+			Chromebay.ui.animation($a.next().find('.add-animation')).start();
 			ajax();
 		});
 	});
@@ -194,7 +202,7 @@ Chromebay.addWord = function(word){
 		$.ajax({
 			url:Chromebay.url.add(word),
 			complete:function(jqXHR){
-				Chromebay.ui.animation($a.next().find('.animation')).clear();
+				Chromebay.ui.animation($a.next().find('.add-animation')).clear();
 				var success=true;
 				var learningID=0;
 				if(jqXHR.responseText==''){

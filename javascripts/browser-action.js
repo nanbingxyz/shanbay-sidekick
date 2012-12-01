@@ -23,7 +23,7 @@ Chromebay.autocomplete={
 				}).data( "autocomplete" )._renderItem = function( ul, item ) {
 		            return $( '<li title="'+item.definition+'" >' )
 		                .data( "item.autocomplete", item )
-		                .append( '<a href="javascript:void(0)"><span class="word">'+item.value+'</span><span class="definition">'+item.definition.sub(40)+'</span></a>' )
+		                .append( '<a href="javascript:void(0)"><span class="word">'+item.value+'</span><span class="desc">'+item.definition.sub(40)+'</span></a>' )
 		                .appendTo(ul);
 				};
 			}
