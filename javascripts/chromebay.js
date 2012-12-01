@@ -33,7 +33,6 @@ Chromebay.ui={
 	animation:function($el){
 		var key = $el.attr('id');
 		this.start=function(n){
-			console.dir($el);
 			if(Chromebay.ui.data[key])return;
 			var dots='';
 			Chromebay.ui.data[key] = setInterval(function(){
@@ -230,7 +229,6 @@ Chromebay.addWord = function(word){
 Chromebay.examples={
 
 	load:function(learningID){
-		console.dir(Chromebay.context.$('.examples-animation'));
 		Chromebay.ui.animation(Chromebay.context.$('.examples-animation')).start();
 		$.get(Chromebay.url.examples(learningID),null,function(json){
 			if(json.examples_status==1|| json.examples.length>0){

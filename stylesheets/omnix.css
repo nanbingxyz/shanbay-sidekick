@@ -36,7 +36,7 @@
 #chromebay-ominx-container .foot{padding:5px 10px;width: 100%;text-align: right;}
 #chromebay-ominx-container .content{padding:10px 20px;line-height: 180%;width:360px;font-size: 12px!important;border:none!important;background: transparent;min-height: 100px;}
 #chromebay-ominx-container .close, #chromebay-capture-container .close{font-size: 12px!important;text-decoration:none!important;color: #999!important; }
-#chromebay-ominx-separator{position:absolute;height:67px;width:33px;top:20px;right:-33px;z-index:99999;}
+#chromebay-ominx-separator{position:absolute;height:67px;width:33px;top:20px;right:-33px;z-index:99999;cursor: pointer;}
 .chromebay div, 
 .chromebay table, 
 .chromebay td{width:auto;margin: 0;padding: 0;border:none!important;}

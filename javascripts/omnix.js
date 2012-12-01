@@ -51,6 +51,14 @@ $container.find('.close').click(function(){
 	$container.remove();
 });
 
+$('#chromebay-ominx-separator').click(function(){
+	if($container.css('left')=='0px'){
+		$container.animate({
+			left:'-400px' 
+		},1000).find('#chromebay-ominx-separator img').attr('src',chrome.extension.getURL('images/expande.png'));
+	}
+});
+
 
 Chromebay.query(Chromebay.context.word,$container.find('.content'));
 
