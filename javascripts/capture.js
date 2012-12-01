@@ -123,11 +123,12 @@ $(function(){
 	chromebayCapture.enable();
 	$(document.body).keyup(function(e){
 		if(e.which==27){
-			if(chromebayCapture.enabled){
+			var indicator=$('#chromebay-capture-indicator');
+			if(chromebayCapture.enabled||indicator.css('display')!='none'){
 				chromebayCapture.disable();
-				$('#chromebay-capture-indicator').fadeOut('fast');
+				indicator.fadeOut('fast');
 			}else{
-				$('#chromebay-capture-indicator').fadeIn('fast');
+				indicator.fadeIn('fast');
 				chromebayCapture.enable();
 			}	
 		}
