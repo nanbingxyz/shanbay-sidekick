@@ -36,6 +36,7 @@
 #chromebay-ominx-container .foot{padding:5px 10px;width: 100%;text-align: right;}
 #chromebay-ominx-container .content{padding:10px 20px;line-height: 180%;width:360px;font-size: 12px!important;border:none!important;background: transparent;min-height: 100px;}
 #chromebay-ominx-container .close, #chromebay-capture-container .close{font-size: 12px!important;text-decoration:none!important;color: #999!important; }
+#chromebay-ominx-container .close:hover, #chromebay-capture-container .close:hover{background:none;}
 #chromebay-ominx-separator{position:absolute;height:67px;width:33px;top:20px;right:-33px;z-index:99999;cursor: pointer;}
 .chromebay div, 
 .chromebay table, 
@@ -47,11 +48,11 @@
 .chromebay ul{
 	margin: 0!important;
 	padding: 0!important;
-	list-style-type:square;
-	list-style-position:inside;
+	list-style-type:square!important;
+	list-style-position:inside!important;
 	border:none!important;
 }
-.chromebay li{padding: 5px 0;margin:0;font-size: 12px!important;}
+.chromebay li{padding: 5px 0;margin:0;font-size: 12px!important;line-height: 160%!important;}
 .chromebay a:link,.chromebay a:visited{color: #0088cc!important;text-decoration: none!important; font-size: 12px!important;font-weight: normal!important;font-family: inherit;}
 .chromebay a:hover{color: #666!important;text-decoration: none!important;}
 .chromebay .undefined{font-size: 12px!important;}
@@ -61,11 +62,12 @@
 .chromebay .pron .tools a{display: inline-block;padding: 2px 6px;background: #efefef;font-size: 12px!important;font-weight: normal!important;font-family: "Microsoft Yahei"!important;}
 .chromebay .pron .tools span{display: inline-block;padding: 2px 6px;font-size: 12px!important;font-weight: normal!important;font-family: "Microsoft Yahei"!important;}
 .chromebay .pron .tools a:hover{background: #e5e5e5;}
-.chromebay .definition{font-size: 14px;font-family: "Microsoft Yahei";line-height: 160%!important;}
+.chromebay .definition{font-size: 14px;font-family: "Microsoft Yahei"!important;line-height: 160%!important;}
 .chromebay .en-definitions{font-size: 12px;font-family: arial,sans-serif;}
 .chromebay .en-definitions .key{margin-top: 5px;line-height: 160%;}
 .chromebay .en-definitions li{line-height: 180%;padding: 2px 0!important;}
 .chromebay .examples div{padding:10px!important;background: #fafafa;margin: 10px 0!important;font-size: 12px!important;}
+#chromebay-capture-container .examples div{background: #f1f1f1!important;}
 .chromebay .examples .entry{color:orange;}
 .chromebay .cancel{display: inline-block!important;padding-right: 10px;}
 

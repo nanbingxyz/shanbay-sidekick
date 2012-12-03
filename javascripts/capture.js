@@ -1,7 +1,6 @@
 Chromebay.context.ctxId = 'chromebay-capture';
 Chromebay.context.cacheEnabled = false;
 
-
 var chromebayCapture={
 	enabled:false,
 	regListener:function(){
@@ -84,13 +83,14 @@ var chromebayCapture={
 			el.style.minHeigt="60px";
 			el.style.MozBorderRadius ='5px';
 			el.style.WebkitBorderRadius='5px'
-			el.style.border="1px solid #ddd";
-			el.style.background="#f1f1f1";
+			el.style.borderWidth="1px 0 0 1px";
+			el.style.borderStyle="solid";
+			el.style.borderColor="#dddddd";
+			el.style.background="#fafafa";
 			el.style.position='absolute';
 			el.style.zIndex="9999999";
-			el.style.boxShadow='0 1px 3px rgba(0, 0, 0, 0.3)';
-			el.style.MozBoxShadow='0 1px 3px rgba(0, 0, 0, 0.3)';
-			el.style.WebkitBoxShadow='0 1px 3px rgba(0, 0, 0, 0.3)';
+			el.style.boxShadow='1px 1px 3px rgba(0, 0, 0, 0.3)';
+			el.style.WebkitBoxShadow='1px 1px 3px rgba(0, 0, 0, 0.3)';
 			document.body.appendChild(el);
 		}
 		var pos = chromebayCapture.mouseCoords(e);

@@ -57,11 +57,11 @@ Chromebay.ui={
 		}
 	},
 	queryLoadingHTML: function(){
-		return '<div id="'+Chromebay.context.ctxId+'" class="chromebay"><a href="javascript:void(0)" class="cancel" style="font-size:12px;">取消</a><span style="font-size:12px;">正在查询中</span><span class="query-animation" id="chromebay-animation-1"></span></div>';
+		return '<div id="'+Chromebay.context.ctxId+'" class="chromebay"><a href="javascript:void(0)" class="cancel" style="font-size:12px;font-family: \'Microsoft Yahei\';">取消</a><span style="font-size:12px;font-family: \'Microsoft Yahei\'">正在查询中</span><span class="query-animation" id="chromebay-animation-1"></span></div>';
 	},
 	render: function(json){
 		if(json.voc==""){
-			return '<div class="undefined" style="font-size:12px;">未找到单词<strong>'+Chromebay.context.word+'</strong>对应的解释。</div>';
+			return '<div class="undefined" style="font-size:12px;font-family: \'Microsoft Yahei\'">未找到单词&nbsp;<strong>'+Chromebay.context.word+'</strong>&nbsp;对应的解释。</div>';
 		}
 		Chromebay.cache(json.voc.content,json.voc.definition);
 		var html='<div class="word" learning_id="'+json.learning_id+'">';
@@ -102,7 +102,7 @@ Chromebay.ui={
 		html+='<table class="en-definitions" border="0">';
 		for(var key in json.voc.en_definitions){
 			html+='<tr>'+
-			'<td valign="top" align="left" width="10px"><ul style="list-style-type:none;margin-right:2px;"><li>'+key+'</li></ul></td>'+
+			'<td valign="top" align="left" width="10px"><ul style="list-style-type:none!important;margin-right:2px;"><li style="list-style-type:none!important;">'+key+'</li></ul></td>'+
 			'<td valign="top" align="left">'+renderEnDefinitions(key)+'</td>'+
 			'</tr>';
 		}
@@ -174,7 +174,7 @@ Chromebay.query = function(word,$container,onStart,onComplete,onError){
 					}
 					var html='<div id="'+Chromebay.context.ctxId+'" class="chromebay">'+
 						'<div class="login">'+
-							'<a href="http://www.shanbay.com/accounts/login/" target="_blank">登录扇贝</a>'+
+							'<a href="http://www.shanbay.com/accounts/login/" target="_blank">登录扇贝</a>&nbsp;&nbsp;'+
 							'<span>请检查网络连接，确认可以正常访问扇贝网</span>'+
 						'</div>'+
 					'</div>';

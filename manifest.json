@@ -1,9 +1,9 @@
 {
   "manifest_version":2,
   "name": "扇贝Sidekick",
-  "version": "0.1",
+  "version": "0.2.1",
   "description": "扇贝网插件，提供单词快捷查询及划词翻译等功能",
-  "homepage_url":"http://www.shanbay.com",
+  "homepage_url":"http://code.google.com/p/shanbay-sidekick/",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "omnibox": { "keyword" : "sk" },
   "icons":{
