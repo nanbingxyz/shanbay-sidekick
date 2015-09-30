@@ -43,7 +43,4 @@ sk, Tab键, +号:启用划词翻译;
 
 
 
-[项目主页](http://sidekick.zohosites.com/)
-
 [到Chrome应用商店安装该扩展](https://chrome.google.com/webstore/detail/%E6%89%87%E8%B4%9Dsidekick/lpecbhfejddelijiphilcmbgohoiphnb?hl=zh-CN&gl=001)
-
