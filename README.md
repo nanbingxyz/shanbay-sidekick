@@ -2,15 +2,17 @@
 
 扇贝网Chrome插件，提供单词快捷查询及划词翻译等功能.
 
+
+
 ## 方便快捷的单词查询
 
-![https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-1.png](单词查询)
+![单词查询](https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-1.png)
 
 
 
 自动补全（最近十次查询记录）
 
-![https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-2.png](根据最近的查询记录自动补全)
+![根据最近的查询记录自动补全](https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-5.png)
 
 
 
@@ -18,9 +20,9 @@
 
 在地址栏数据关键字sk,按Tab键，然后输入要查询的单词
 
-![https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-3.png](通过地址栏查询单词)
+![通过地址栏查询单词](https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-3.png)
 
-![https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-4.png](查询结果)
+![查询结果](https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-2.png)
 
 
 
@@ -37,7 +39,7 @@
 
 sk, Tab键, +号:启用划词翻译;
 
-![https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-4.png](划词翻译)
+![划词翻译](https://raw.githubusercontent.com/Bing1983/shanbay-sidekick/master/screenshot/shanbay-sidekick-screenshot-4.png)
 
 
 
